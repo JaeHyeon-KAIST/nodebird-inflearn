@@ -1,0 +1,14 @@
+{
+  "name": "react-nodebird-front",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next"
+  },
+  "author": "Lee JaeHyeon",
+  "license": "ISC",
+  "dependencies": {
+    "next": "^13.2.3"
+  }
+}
