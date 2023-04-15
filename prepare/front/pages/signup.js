@@ -2,9 +2,11 @@ import React, { useState, useCallback } from 'react';
 import { Form, Input, Checkbox, Button } from 'antd';
 import PropTypes from 'prop-types';
 
+import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
 import AppLayout from '../components/AppLayout';
 import useInput from '../hooks/useInput';
-import styled from 'styled-components';
+import { SIGN_UP_REQUEST } from '../reducers/user';
 
 const FormWrapper = styled(Form)`
   margin: 10px;
@@ -20,29 +22,20 @@ const TextInput = ({ value }) => {
 };
 
 TextInput.propTypes = {
+  // eslint-disable-next-line react/require-default-props
   value: PropTypes.string,
 };
 
 const Signup = () => {
-  const [passwordCheck, setPasswordCheck] = useState('');
-  const [term, setTerm] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [termError, setTermError] = useState(false);
+  const dispatch = useDispatch();
+  const { signUpLoading } = useSelector((state) => state.user);
 
-  const [id, onChangeId] = useInput('');
+  const [email, onChangeEmail] = useInput('');
   const [nickname, onChangeNickname] = useInput('');
   const [password, onChangePassword] = useInput('');
 
-  const onSubmit = useCallback(() => {
-    if (password !== passwordCheck) {
-      return setPasswordError(true);
-    }
-    if (!term) {
-      return setTermError(true);
-    }
-    console.log(id, nickname, password);
-  }, [password, passwordCheck, term]);
-
+  const [passwordCheck, setPasswordCheck] = useState('');
+  const [passwordError, setPasswordError] = useState(false);
   const onChangePasswordCheck = useCallback(
     (e) => {
       setPasswordError(e.target.value !== password);
@@ -51,18 +44,34 @@ const Signup = () => {
     [password],
   );
 
+  const [term, setTerm] = useState(false);
+  const [termError, setTermError] = useState(false);
   const onChangeTerm = useCallback((e) => {
     setTermError(false);
     setTerm(e.target.checked);
   }, []);
 
+  const onSubmit = useCallback(() => {
+    if (password !== passwordCheck) {
+      return setPasswordError(true);
+    }
+    if (!term) {
+      return setTermError(true);
+    }
+    console.log(email, nickname, password);
+    dispatch({
+      type: SIGN_UP_REQUEST,
+      data: { email, password, nickname },
+    });
+  }, [email, password, passwordCheck, term]);
+
   return (
     <AppLayout>
       <FormWrapper onFinish={onSubmit}>
         <div>
-          <label htmlFor="user-id">아이디</label>
+          <label htmlFor="user-email">이메일</label>
           <br />
-          <Input name="user-id" value={id} required onChange={onChangeId} />
+          <Input name="user-email" type="email" value={email} required onChange={onChangeEmail} />
         </div>
         <div>
           <label htmlFor="user-nick">닉네임</label>
@@ -93,7 +102,7 @@ const Signup = () => {
           {termError && <ErrorMessage>약관에 동의하셔야 합니다.</ErrorMessage>}
         </div>
         <ButtonWrapper>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" loading={signUpLoading}>
             가입하기
           </Button>
         </ButtonWrapper>

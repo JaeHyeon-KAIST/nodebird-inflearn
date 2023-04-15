@@ -7,6 +7,7 @@ const PostCardContent = ({ postData }) => (
     {postData.split(/(#[^\s#]+)/g).map((v, i) => {
       if (v.match(/(#[^\s#]+)/)) {
         return (
+          // eslint-disable-next-line react/no-array-index-key
           <Link href={`/hashtag/${v.slice(1)}`} key={i}>
             {v}
           </Link>

@@ -5,6 +5,7 @@ import user from './user';
 import post from './post';
 
 const rootReducer = combineReducers({
+  // eslint-disable-next-line default-param-last
   index: (state = {}, action) => {
     switch (action.type) {
       case HYDRATE:
