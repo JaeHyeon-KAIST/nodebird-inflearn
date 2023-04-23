@@ -2,6 +2,7 @@ import { all, fork } from 'redux-saga/effects';
 import axios from 'axios';
 import postSaga from './post';
 import userSaga from './user';
+import backUrl from '../config/config'
 
 axios.defaults.baseURL = 'https://jaehyeon.art/nodebird-server';
 // axios.defaults.withCredentials = true;
